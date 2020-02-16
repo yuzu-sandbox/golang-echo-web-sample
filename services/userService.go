@@ -15,10 +15,12 @@ type CreateUserArgs struct {
 	Age  uint
 }
 
-func CreateUser(repo CreateUserRepository, args CreateUserArgs) *models.User {
-	u := &models.User{args.Name, args.Age}
-	if err := repo.CreateUser(u); err != nil {
-		return nil
+func CreateUser(repo CreateUserRepository, u *models.User) error {
+	if err := u.Validate(); err != nil {
+		return err
 	}
-	return u
+	if err := repo.CreateUser(u); err != nil {
+		return err
+	}
+	return nil
 }
